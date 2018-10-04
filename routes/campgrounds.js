@@ -23,6 +23,7 @@ router.get("/new", middleware.isLoggedIn, function (req, res) {
 router.post("/", middleware.isLoggedIn, function (req, res) {
     //get data from form and add to array
     var name = req.body.name;
+    var price = req.body.price;
     var image = req.body.image;
     var desc = req.body.description;
     var author = {
@@ -31,14 +32,17 @@ router.post("/", middleware.isLoggedIn, function (req, res) {
     }
     var newCampground = {
         name: name,
+        price: price, 
         image: image,
         description: desc,
         author: author
     };
     Campgrounds.create(newCampground, function(err, newlyCreated) {
         if (err) {
+            req.flash("error", "Had trouble creating crampground");
             console.log(err);
         } else {
+            req.flash("success", "Campground created");
             res.redirect("/campgrounds");
         }
     });
@@ -52,7 +56,6 @@ router.get("/:id", function(req, res) {
             console.log(err);
         } else {
             console.log(foundCampground);
-            // render show template with that campground
             res.render("campgrounds/show", {campground: foundCampground});
         }
     });
@@ -78,11 +81,10 @@ router.put("/:id", middleware.checkCampgroundOwnership, function(req, res) {
         if (err) {
             res.redirect("/campgrounds");
         } else {
-            console.log("yo")
+            req.flash("success", "Campground updated");
             res.redirect("/campgrounds/" + req.params.id);
         }
     });
-    //redirect somewhere
 });
 
 // DESTROY
@@ -91,6 +93,7 @@ router.delete("/:id", middleware.checkCampgroundOwnership, function(req, res) {
         if (err) {
             res.redirect("/campgrounds");
         } else {
+            req.flash("success", "Campground deleted");
             res.redirect("/campgrounds");
         }
     })

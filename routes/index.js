@@ -21,10 +21,11 @@ router.post("/register", function(req, res) {
     var newUser = new user({username: req.body.username});
     user.register(newUser, req.body.password, function(err, user) {
         if (err) {
-            console.log(err);
+            req.flash("error", err.message);
             return res.render("register");
         }
         passport.authenticate("local")(req, res, function() {
+            req.flash("success", "Welcome to KnoxGolf " + user.username);
             res.redirect("/campgrounds");
         });
     });
@@ -45,15 +46,8 @@ router.post("/login", passport.authenticate("local", {
 // logout
 router.get("/logout", function(req, res) {
     req.logout();
+    req.flash("success", "Logged out");
     res.redirect("/login");
 });
-
-function isLoggedIn(req, res, next) {
-    if (req.isAuthenticated()) {
-        return next();
-    } else {
-        res.redirect("/login");
-    }
-}
 
 module.exports = router;
