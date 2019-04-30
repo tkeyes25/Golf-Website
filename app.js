@@ -4,7 +4,7 @@ var express          = require("express"),
     mongoose         = require("mongoose"),
     passport         = require("passport"),
     localStrategy    = require("passport-local"),
-    methodOverride  = require("method-override"),
+    methodOverride   = require("method-override"),
     user             = require("./models/user"),
     Campgrounds      = require("./models/campground"),
     Comments         = require("./models/comment"),
@@ -45,6 +45,6 @@ app.use(indexRoutes);
 app.use("/campgrounds/:id/comments", commentRoutes);
 app.use("/campgrounds", campgroundRoutes);
 
-app.listen(process.env.PORT, process.env.IP, function() {
+app.listen(8000, function() {
     console.log("YelpCamp server has started");
 });
